@@ -1,16 +1,19 @@
 from flask import Flask, request, abort
-from inspection import predict
+from inspection import predict, prepare_models
+from schedule import start
 
 app = Flask(__name__)
 
+prepare_models()
+
+start()
+
+
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    if request.method == 'GET':
-        return "Hello world"
-    
-    elif request.method == 'POST':
+    if request.method == 'POST':
         
-        predict(request.json)
+        # TODO - hanlde request somehow
 
         return '', 200
 

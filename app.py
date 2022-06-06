@@ -1,22 +1,18 @@
-from flask import Flask, request, abort
-from inspection import predict, prepare_models
-from schedule import start
+from flask import Flask, request, abort, jsonify
+# from inspection import predict, prepare_models
+# from schedule import start
 
 app = Flask(__name__)
-
-prepare_models()
-
-start()
+# prepare_models()
+# start()
 
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
     if request.method == 'POST':
-        
-        # TODO - hanlde request somehow
-
-        return '', 200
-
+        country = request.get_json()['Country']
+        print(f'New request for {country}')
+        return jsonify({"Response": 'OK'})
     else:
         abort(405)
 

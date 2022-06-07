@@ -7,6 +7,7 @@ f = open('data.json')
 url = 'http://127.0.0.1:5000'
 data_json = json.load(f)
 
+
 def generate_traffic(name, data):
     for rpm in data:
         sleep_time = 60 / rpm

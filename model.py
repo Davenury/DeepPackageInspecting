@@ -2,8 +2,6 @@ from typing import NamedTuple, List
 
 import tensorflow as tf
 
-from data import Dataset, DatasetConfig
-
 
 class TrafficModelConfig(NamedTuple):
     window_size: int = 2

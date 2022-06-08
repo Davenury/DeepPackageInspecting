@@ -3,17 +3,17 @@
 from instances.en import build_model_and_dataset
 from train import train, TrainingConfig
 
-model, dataset = build_model_and_dataset()
+model_config, dataset_config = build_model_and_dataset()
 
 config = TrainingConfig(
     batch_size=64,
-    epochs=1
+    epochs=1,
+    model_config=model_config,
+    dataset_config=dataset_config
 )
 
 model, dataset = train(
     config=config,
-    model=model,
-    dataset=dataset
 )
 ```
 

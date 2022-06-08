@@ -24,7 +24,4 @@ def build_model_and_dataset():
         metrics=["mse", "mae"],
     )
 
-    model = TrafficModel(config=model_config)
-    dataset = Dataset(config=dataset_config)
-
-    return model, dataset
+    return model_config, dataset_config

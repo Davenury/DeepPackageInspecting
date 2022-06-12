@@ -1,10 +1,10 @@
 from flask import Flask, request, abort, jsonify
-# from inspection import predict, prepare_models
-# from schedule import start
+from inspection import prepare_models
+from schedule_job import start_scheduling
 
 app = Flask(__name__)
-# prepare_models()
-# start()
+prepare_models()
+start_scheduling()
 
 
 @app.route('/', methods=['POST', 'GET'])

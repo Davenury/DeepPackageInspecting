@@ -1,15 +1,18 @@
-from random import randint
+import random
 from datetime import datetime
+import tensorflow as tf
+import pandas as pd
 
+r = random.SystemRandom()
 
 RPS_PER_INSTANCE = 10
 
 models = {}
 
 three_last_predictions = {
-    "zh": [randint(10), randint(10), randint(10)],
-    "fr": [randint(10), randint(10), randint(10)],
-    "en": [randint(10), randint(10), randint(10)]
+    "zh": [r.randint(1,10), r.randint(1,10)],
+    "fr": [r.randint(1,10), r.randint(1,10)],
+    "en": [r.randint(1,10), r.randint(1,10)]
 }
 
 per_region_instances = {
@@ -20,28 +23,26 @@ per_region_instances = {
 
 regions = ["zh", "fr", "en"]
 
-def load_model(model_file):
-    return model_file
+def load_model(model_location):
+    return tf.keras.models.load_model(model_location)
 
 
 def model_wrapper(region):
-    current = datetime.now()
-    minute = current.minute
-    hour = current.hour
-    return [*three_last_predictions[region], minute, hour]
+    df = pd.DataFrame([three_last_predictions[region]], dtype=float).to_numpy()
+    print(df.shape)
+    return df
 
 
 def predict_for_one(region):
     input = model_wrapper(region)
 
-    model_type = models.get("region")
-    model = models.get(model_type, None)
+    model = models.get(region, None)
     if model is None:
         raise ValueError()
 
-    rps = model.predict(input)
-    instances_needed = rps / RPS_PER_INSTANCE
-    three_last_predictions[region].append(instances_needed)
+    rps = model.predict_boxcox(input).numpy()[0][0]
+    instances_needed = int(rps / RPS_PER_INSTANCE) + 1
+    three_last_predictions[region].append(rps)
     three_last_predictions[region].pop(0)
 
     if instances_needed > per_region_instances[region]:
@@ -69,9 +70,9 @@ def destroy_instance(instance_type):
 
 def prepare_models():
     global models
-    fr_model = load_model("fr_model")
-    zh_model = load_model("zh_model")
-    en_model = load_model("en_model")
+    fr_model = load_model("models/fr_model.model")
+    zh_model = load_model("models/zh_model.model")
+    en_model = load_model("models/en_model.model")
 
     models = {
         "fr": fr_model,

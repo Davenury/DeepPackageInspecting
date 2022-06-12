@@ -35,7 +35,7 @@ def background_job():
     predict()
 
 
-def start():
+def start_scheduling():
     schedule.every(1).minute.do(background_job)
 
     # Start the background thread
